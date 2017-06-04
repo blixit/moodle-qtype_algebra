@@ -1,11 +1,12 @@
 #!/bin/bash
 
+set -e
+
 #Parameters
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 MOODLE_ROOT=$DIR/../../../..
 MOODLE_PHPUNIT=$MOODLE_ROOT/vendor/bin/phpunit
-PHP_EXT=.php
-REPLACE_WITH=
+TEST_DIR="question/type/algebra/tests"
 
 
 if [[ ! -f $MOODLE_PHPUNIT ]]; then
@@ -18,17 +19,7 @@ if [[ ! -d "tests" ]]; then
     exit -1;
 fi
 
-cd $MOODLE_ROOT
-for file in $DIR/*.php
-do
-    filename="${file##*/}"
-    classname="${filename/$PHP_EXT}"
-    cmd="$MOODLE_PHPUNIT $classname $file"
-
-    echo "Testing " $classname " ..."
-    eval $cmd
-    if [[ ! $? -eq 0 ]]; then
-        echo "Tests failed"
-        exit -1;
-    fi
-done
+cd $MOODLE_ROOT/
+cmd="$MOODLE_PHPUNIT $TEST_DIR/ --stop-on-warning --test-suffix=test.php -v "
+eval $cmd
+exit $?

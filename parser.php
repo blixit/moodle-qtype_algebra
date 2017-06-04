@@ -191,6 +191,7 @@ class qtype_algebra_parser_term {
      * a variable and a function etc.
      *
      * @param $args array to set the arguments of the term to
+     * @throws Exception
      */
     function set_arguments($args) {
         if (count($args)!=$this->_nargs) {
@@ -207,8 +208,9 @@ class qtype_algebra_parser_term {
      * an exception will be thrown if the correct number of arguments are not present. Otherwise
      * the function returns false.
      *
-     * @param $exc if true then an exception will be thrown if the number of arguments is incorrect
+     * @param bool|if $exc if true then an exception will be thrown if the number of arguments is incorrect
      * @return true if the correct number of arguments are present, false otherwise
+     * @throws Exception
      */
     function check_arguments($exc=true) {
         $retval=(count($this->_arguments)==$this->_nargs);
@@ -303,6 +305,7 @@ class qtype_algebra_parser_term {
      *
      * @param $expr top level term of an expression to compare against
      * @return true if the expressions match, false otherwise
+     * @throws Exception
      */
     function equivalent($expr) {
         // Check that the argument is also a term
@@ -363,6 +366,7 @@ class qtype_algebra_parser_term {
      *
      * @param $params array of values keyed by variable name
      * @return the numerical value of the term given the provided values for the variables
+     * @throws Exception
      */
     function evaluate($params) {
         throw new Exception(get_string('noevaluate','qtype_algebra',$this->_value));
@@ -699,6 +703,7 @@ class qtype_algebra_parser_variable extends qtype_algebra_parser_term {
      *
      * @param $params array of values keyed by variable name
      * @return the numerical value of the term given the provided values for the variables
+     * @throws Exception
      */
     function evaluate($params) {
         if($this->_sign=='-') {
@@ -1149,6 +1154,7 @@ class qtype_algebra_parser_function extends qtype_algebra_parser_term {
      * matches the name of a function.
      *
      * @param $text string matching the function's regular expression
+     * @throws Exception
      */
     function __construct($text) {
         if(!function_exists($text) and !array_key_exists($text,self::$fnmap)) {
@@ -1184,6 +1190,7 @@ class qtype_algebra_parser_function extends qtype_algebra_parser_term {
      * function's argument is required.
      *
      * @param $args array to set the arguments of the term to
+     * @throws Exception
      */
     function set_arguments($args) {
         if(count($args)!=$this->_nargs) {
@@ -1469,8 +1476,9 @@ class qtype_algebra_parser {
      *
      * @param $text string containing the expression to parse
      * @param $variables array containing known variable names
-     * @param $undecvars whether to allow (true) undeclared variable names
+     * @param bool|whether $undecvars whether to allow (true) undeclared variable names
      * @return top term of the parsed expression
+     * @throws Exception
      */
     function parse($text,$variables=array(),$undecvars=false) {
         // Create a regular expression to match the known variables if an array is specified
@@ -1619,6 +1627,7 @@ class qtype_algebra_parser {
      *
      * @param $tree structured token array
      * @return top term of the fully parsed structure
+     * @throws Exception
      */
     function interpret($tree) {
         // First check to see if we are passed anything at all. If not then simply
